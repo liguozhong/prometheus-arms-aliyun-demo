@@ -1,8 +1,13 @@
-例子 prometheus exporter url :
+已完成案例：基于官方的jvm exporter完成grafana大盘。
+
+##前置：验证前建议先导入Prometheus的grafana自监控大盘
+https://grafana.com/grafana/dashboards/10876
+
+##例子 prometheus exporter url :
 
 http://localhost:8081/prometheus-metrics
 
-例子 jvm exporter:
+##例子 jvm exporter:
 
 
 		<dependency>
@@ -11,12 +16,15 @@ http://localhost:8081/prometheus-metrics
 			<version>0.6.0</version>
 		</dependency>
 
-例子 prometheus-arms-aliyun url :
+##例子 prometheus-arms-aliyun url :
 
 https://arms.console.aliyun.com/#/prom/plugin
 
+##例子：grafana 大盘模版
 
-例子 serviceMonitor.yaml:
+https://grafana.com/grafana/dashboards/4701
+
+##例子 serviceMonitor.yaml:
 
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -41,7 +49,7 @@ spec:
       app: tomcat
 
 
-例子 deploy.yaml:
+##例子 deploy.yaml:
 
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -51,10 +59,6 @@ spec:
   replicas: 2
   template:
     metadata:
-#      annotations:
-#        prometheus.io/scrape: 'true'
-#        prometheus.io/path: '/prometheus-metrics'
-#        prometheus.io/port: '8081'
       annotations:
         armsPilotAutoEnable: "on"
         armsPilotCreateAppName: "arms-prom-tomcat-demo"
@@ -72,7 +76,8 @@ spec:
           name: tomcat-monitor
 
 
-例子 service.yaml
+##例子 service.yaml
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -92,3 +97,11 @@ spec:
   type: NodePort
   selector:
     app: tomcat
+
+
+
+##TODO：高级jvm微服务例子
+exporter：
+https://github.com/mweirauch/micrometer-jvm-extras
+grafana：
+https://grafana.com/grafana/dashboards/4701
