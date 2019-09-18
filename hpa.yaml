@@ -1,0 +1,16 @@
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: promethues-demo-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: promethues-demo
+  minReplicas: 5
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: memory
+      targetAverageValue: 200Mi

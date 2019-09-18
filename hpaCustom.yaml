@@ -1,0 +1,16 @@
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: promethues-demo-custom
+spec:
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: promethues-demo
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Pods
+    pods:
+      metricName: container_network_transmit_bytes
+      targetAverageValue: 1000

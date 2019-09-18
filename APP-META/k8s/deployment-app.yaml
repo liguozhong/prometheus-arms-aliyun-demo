@@ -1,0 +1,66 @@
+apiVersion: apps/v1beta2
+kind: Deploymenr
+metadata:
+  labels:
+    stage: tlog-stage-id
+  name: tlog-stage-id
+spec:
+  serviceName: tlog-stage-id
+  replicas: worker-number
+  selector:
+    matchLabels:
+      stage: tlog-stage-id
+  template:
+    metadata:
+      labels:
+        stage: tlog-stage-id
+    spec:
+      containers:
+      - name: tlog-stage-id
+        image: reg.docker.alibaba-inc.com/fuling/hpa-demo
+        imagePullPolicy: Never
+        volumeMounts:
+            - mountPath: /home/admin/logs
+              name: log-volume
+            - mountPath: /home/admin/tlog/resources
+              name: tlog-volume
+            - mountPath: /home/admin/conf
+              name: tlog-cloud
+        env:
+        - name: TLOG_STAGE
+          value: tlog-stage-json
+        - name: TLOG_SEED_HOST
+          value: tlog-seed-host
+        - name: tlogconsole
+          value: tlog-console-url
+        - name: TLOG_OPT
+        # 由于k8s名称中不能包含_字符，所有的 tlog stage_id都转换为 stage-id。但是环境入参 --tlog.stage还是保留为原有值。
+          value: --tlog.stage.id=tlog-stage_id --tlog.node.port=6071 --task.number=task-number --worker.number=worker-number
+        - name: JAVA_OPT
+          value: java-opt
+        command:
+        - /bin/sh
+        - -c
+        - su admin;export TLOG_NODE_HOST=$HOSTNAME.tlog-stage-id;/home/admin/tlog/bin/entrypoint.sh
+        livenessProbe:
+          tcpSocket:
+            port: 6071
+          periodSeconds: 60
+        ports:
+        - containerPort: 6071
+          protocol: TCP
+      volumes:
+      - name: tlog-volume
+        hostPath:
+          path: /home/admin/tlog/resources
+          type: DirectoryOrCreate
+      - name: log-volume
+        hostPath:
+          path: /home/admin/logs
+          type: DirectoryOrCreate
+      - name: tlog-cloud
+        configMap:
+          name: tlog-cloud.properties
+          items:
+          - key: tlog-cloud.properties
+            path: tlog-cloud.properties
