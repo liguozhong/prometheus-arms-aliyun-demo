@@ -1,3 +1,5 @@
+最终效果：http://arms-prom-grafana-hz.aliyun.com/dashboard/snapshot/5A0Uwzw62rabCTYQriSF8vJWNLZI0rlN
+
 已完成案例：基于官方的jvm exporter完成grafana大盘。
 
 ##前置：验证前建议先导入Prometheus的grafana自监控大盘
@@ -22,6 +24,7 @@ https://arms.console.aliyun.com/#/prom/plugin
 
 ##例子：grafana 大盘模版
 
+https://grafana.com/grafana/dashboards/10877
 https://grafana.com/grafana/dashboards/4701
 
 ##例子 serviceMonitor.yaml:

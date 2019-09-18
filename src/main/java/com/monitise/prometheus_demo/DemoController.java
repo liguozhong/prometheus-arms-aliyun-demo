@@ -9,6 +9,10 @@
 package com.monitise.prometheus_demo;
 
 import com.monitise.prometheus_demo.service.RemoteService;
+import io.github.mweirauch.micrometer.jvm.extras.ProcessMemoryMetrics;
+import io.github.mweirauch.micrometer.jvm.extras.ProcessThreadMetrics;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,10 +32,20 @@ public class DemoController {
     @Autowired
     private RemoteService remoteService;
 
+    //官方基础jvm大盘数据：https://grafana.com/grafana/dashboards/5387
     @PostConstruct
-    public void initJvmExporter(){
+    public void initJvmExporter() {
         io.prometheus.client.hotspot.DefaultExports.initialize();
     }
+
+    //高级jvm大盘数据：https://grafana.com/grafana/dashboards/4701
+    @PostConstruct
+    public void initMicrometerJvmExporter() {
+        final MeterRegistry registry = new SimpleMeterRegistry();
+        new ProcessMemoryMetrics().bindTo(registry);
+        new ProcessThreadMetrics().bindTo(registry);
+    }
+
 
     @RequestMapping(value = "/sort", method = RequestMethod.GET)
     @ResponseBody
