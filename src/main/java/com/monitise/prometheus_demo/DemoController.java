@@ -13,6 +13,8 @@ import io.github.mweirauch.micrometer.jvm.extras.ProcessMemoryMetrics;
 import io.github.mweirauch.micrometer.jvm.extras.ProcessThreadMetrics;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,6 +28,7 @@ import java.util.Random;
 
 @RestController
 public class DemoController {
+    private static final Logger log = LoggerFactory.getLogger(DemoController.class);
 
     private static Random random = new Random();
 
@@ -50,21 +53,25 @@ public class DemoController {
     @RequestMapping(value = "/sort", method = RequestMethod.GET)
     @ResponseBody
     public String sortNumbers(HttpServletRequest request) {
-        int upperLimit = (int) (Math.random() * 10_000_000);
+//        int upperLimit = (int) (Math.random() * 10_000_000);
+        int upperLimit = (int) (Math.random() * 10);
 
         int[] array = new int[upperLimit];
         for (int i = 0; i < upperLimit; i++) {
             array[i] = (int) (10_000 * Math.random());
         }
         Arrays.sort(array);
-        System.out.printf("sorted %d integers\n", upperLimit);
+//        System.out.printf("sorted %d integers\n", upperLimit);
+        log.info("sort info output");
+        log.error("sort warn output", new RuntimeException(" illegal param ,test arms loki msg."));
         return "sorted " + upperLimit + " integers";
     }
 
     @RequestMapping(value = "/test")
     public String nowork(HttpServletRequest request) {
-        System.out.println("v4");
-        return "v4";
+        log.info("test info output");
+        log.error("test warn output", new RuntimeException(" illegal param ,test arms loki msg."));
+        return "test";
     }
 
     public void a() {
