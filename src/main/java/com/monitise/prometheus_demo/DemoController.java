@@ -58,12 +58,13 @@ public class DemoController {
 
         int[] array = new int[upperLimit];
         for (int i = 0; i < upperLimit; i++) {
-            array[i] = (int) (10_000 * Math.random());
+            array[i] = (int) (10_0 * Math.random());
         }
         Arrays.sort(array);
 //        System.out.printf("sorted %d integers\n", upperLimit);
-        log.info("sort info output");
-        log.error("sort warn output", new RuntimeException(" illegal param ,test arms loki msg."));
+        String n = log.getClass().getName();
+        log.info("sort info output,n:" + n);
+        log.error("sort warn output,n" + n, new RuntimeException(" illegal param ,test arms loki msg."));
         return "sorted " + upperLimit + " integers";
     }
 
